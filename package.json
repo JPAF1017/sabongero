@@ -1,0 +1,19 @@
+{
+  "name": "sabongero",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Paolito",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "inquirer": "^12.10.0"
+  }
+}
