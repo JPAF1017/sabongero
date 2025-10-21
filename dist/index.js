@@ -1,39 +1,51 @@
-import * as readline from "readline";
-// Collection of Monsties
+import inquirer from 'inquirer';
+//Collection of Monstie
 const monsties = [
     { id: 1, name: "Rommeller", moves: ["attack", "fire", "heal"] },
     { id: 2, name: "Kinit", moves: ["attack", "water", "heal"] },
     { id: 3, name: "Kinit", moves: ["attack", "leaf", "heal"] },
 ];
-// Create a readline interface
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-});
-// Function to ask for input
-function ask(question) {
-    return new Promise((resolve) => rl.question(question, resolve));
+// Function to display all monsties
+function displayMonsties() {
+    console.log("\n=== All Monsties ===");
+    monsties.forEach(monstie => {
+        console.log(`ID: ${monstie.id}`);
+        console.log(`Name: ${monstie.name}`);
+        console.log(`Moves: ${monstie.moves.join(", ")}`);
+        console.log("-------------------");
+    });
 }
-// Main function
-(async () => {
-    let answer = "";
-    console.log("What do you want to do?");
-    // monsties.forEach((m) => console.log(`${m.id}. ${m.name}`));
-    // const idInput = await ask("Enter the ID of the monstie you want to rename: ");
-    // const monstie = monsties.find((m) => m.id === Number(idInput));
-    // if (!monstie) {
-    //   console.log("❌ Monstie not found!");
-    //   rl.close();
-    //   return;
-    // }
-    // const newName = await ask(`Enter a new name for ${monstie.name}: `);
-    // monstie.name = newName;
-    // console.log("\nMonstie renamed successfully!");
-    // console.log("Updated Monsties:");
-    // monsties.forEach((m) => console.log(`${m.id}. ${m.name}`));
-    if (answer === "list") {
-        monsties.forEach((m) => console.log(`${m.id}. ${m.name}`));
+// Main input loop function
+async function startInputLoop() {
+    console.log("Welcome to Sabongero!");
+    console.log("Type 'list' to see all monsties, or 'exit' to quit.");
+    while (true) {
+        try {
+            const { command } = await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'command',
+                    message: 'Enter command:',
+                }
+            ]);
+            const trimmedCommand = command.trim().toLowerCase();
+            if (trimmedCommand === 'list') {
+                displayMonsties();
+            }
+            else if (trimmedCommand === 'exit') {
+                console.log("Goodbye!");
+                break;
+            }
+            else {
+                console.log(`Unknown command: "${command}". Try 'list' or 'exit'.`);
+            }
+        }
+        catch (error) {
+            console.log("An error occurred:", error);
+            break;
+        }
     }
-    rl.close();
-})();
+}
+// Start the application
+startInputLoop();
 //# sourceMappingURL=index.js.map
