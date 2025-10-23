@@ -34,7 +34,7 @@ export async function processCommand(command: string): Promise<boolean> {
       return false;
     default:
       console.log(`Unknown command.`);
-      console.log("Commands: list, explore, exit\n");
+      console.log("Commands: list, explore, remove, exit\n");
       return true;
   }
 }

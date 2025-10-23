@@ -93,19 +93,23 @@ export async function fightScene (chosenMonstie: MonstieStat, enemy: MonstieStat
         break;
       //=======================================================================================================
       case "4":
+        // Capture logic
         const capturableHealth = enemy.health * 0.3;
+        // Stops capturing if enemy health is above 30%
         if (enemyHealth > capturableHealth) {
           console.log(`\n${enemy.name} is too healthy to capture! Reduce its health below ${capturableHealth} to capture it.\n`);
           const enemyTurn4a = await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
           playerHealth -= enemyTurn4a.damage;
           enemyHealth = enemyTurn4a.newEnemyHealth;
           console.log(`\nPlayer Health: ${playerHealth} | Enemy Health: ${enemyHealth}\n`);
+        // Stops player from capturing more than 6 monsties
         } else if (team.length >= 6) {
           console.log(`\nYour team is full! You cannot capture more monsties, greedy ka na nonoy.\n`);
           const enemyTurn4b = await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
           playerHealth -= enemyTurn4b.damage;
           enemyHealth = enemyTurn4b.newEnemyHealth;
           console.log(`\nPlayer Health: ${playerHealth} | Enemy Health: ${enemyHealth}\n`);
+        // Successful capture
         } else {
           console.log(`\nYou have captured ${enemy.name}!\n`);
           enemy.health = enemyMaxHealth;
