@@ -14,7 +14,7 @@ export async function fightStart(enemy: MonstieStat): Promise<void> {
   console.log("\n");
   console.log("Choose your monstie for battle:");
   team.forEach((monstie, index) => {
-    console.log(`${index + 1}. ${monstie.name} (Health: ${monstie.health})`);
+    console.log(`${index + 1}. ${monstie.name} (Health: ${monstie.health}) (Element: ${monstie.moves[1]})`);
   });
 
   // Choosing a monstie
@@ -47,6 +47,7 @@ export async function fightScene (chosenMonstie: MonstieStat, enemy: MonstieStat
   let playerHealth = chosenMonstie.health;
   let maxPlayerHealth = chosenMonstie.health;
   let enemyHealth = enemy.health;
+  let enemyMaxHealth = enemy.health;
   
   while (playerHealth > 0 && enemyHealth > 0) { 
     let action = "";
@@ -66,7 +67,9 @@ export async function fightScene (chosenMonstie: MonstieStat, enemy: MonstieStat
       case "1":
         console.log(`\n${chosenMonstie.name} attacks for 2 damage!\n`);
         enemyHealth -= 2;
-        await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
+        const enemyTurn1 = await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
+        playerHealth -= enemyTurn1.damage;
+        enemyHealth = enemyTurn1.newEnemyHealth;
         console.log(`\nPlayer Health: ${playerHealth} | Enemy Health: ${enemyHealth}\n`);
         break;
       //=======================================================================================================
@@ -74,14 +77,18 @@ export async function fightScene (chosenMonstie: MonstieStat, enemy: MonstieStat
         const damage = calculateElementDamage(chosenMonstie, enemy);
         console.log(`\n${chosenMonstie.name} uses ${chosenMonstie.moves[1]} for ${damage} damage!\n`);
         enemyHealth -= damage;
-        await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
+        const enemyTurn2 = await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
+        playerHealth -= enemyTurn2.damage;
+        enemyHealth = enemyTurn2.newEnemyHealth;
         console.log(`\nPlayer Health: ${playerHealth} | Enemy Health: ${enemyHealth}\n`);
         break;
       //=======================================================================================================
       case "3":
         console.log(`\n${chosenMonstie.name} heals for 2 health!\n`);
         playerHealth += 2;
-        await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
+        const enemyTurn3 = await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
+        playerHealth -= enemyTurn3.damage;
+        enemyHealth = enemyTurn3.newEnemyHealth;
         console.log(`\nPlayer Health: ${playerHealth} | Enemy Health: ${enemyHealth}\n`);
         break;
       //=======================================================================================================
@@ -89,14 +96,19 @@ export async function fightScene (chosenMonstie: MonstieStat, enemy: MonstieStat
         const capturableHealth = enemy.health * 0.3;
         if (enemyHealth > capturableHealth) {
           console.log(`\n${enemy.name} is too healthy to capture! Reduce its health below ${capturableHealth} to capture it.\n`);
-          await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
+          const enemyTurn4a = await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
+          playerHealth -= enemyTurn4a.damage;
+          enemyHealth = enemyTurn4a.newEnemyHealth;
           console.log(`\nPlayer Health: ${playerHealth} | Enemy Health: ${enemyHealth}\n`);
         } else if (team.length >= 6) {
           console.log(`\nYour team is full! You cannot capture more monsties, greedy ka na nonoy.\n`);
-          await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
+          const enemyTurn4b = await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
+          playerHealth -= enemyTurn4b.damage;
+          enemyHealth = enemyTurn4b.newEnemyHealth;
           console.log(`\nPlayer Health: ${playerHealth} | Enemy Health: ${enemyHealth}\n`);
         } else {
           console.log(`\nYou have captured ${enemy.name}!\n`);
+          enemy.health = enemyMaxHealth;
           team.push(enemy);
           return;
         }
@@ -118,35 +130,36 @@ export async function fightScene (chosenMonstie: MonstieStat, enemy: MonstieStat
 
 //=======================================================================================================
 // Function for enemy's turn
-export async function enemyTurn(enemy: MonstieStat, playerHealth: number, enemyHealth: number, chosenMonstie: MonstieStat): Promise<void> {
+export async function enemyTurn(enemy: MonstieStat, playerHealth: number, enemyHealth: number, chosenMonstie: MonstieStat): Promise<{ damage: number; newEnemyHealth: number }> {
   const randomID = Math.floor(Math.random() * enemy.moves.length);
   const enemyMove = enemy.moves[randomID];
+  let enemyDamage = 0;
+  let newEnemyHealth = enemyHealth;
 
   switch (enemyMove) {
     case "attack":
       console.log(`\n${enemy.name} attacks for 2 damage!\n`);
-      playerHealth -= 2;
+      enemyDamage = 2;
       break;
     case "fire":
       console.log(`\n${enemy.name} uses fire!\n`);
-      const fireDamage = await enemyElementDamage(enemy, chosenMonstie);
-      playerHealth -= fireDamage;
+      enemyDamage = await enemyElementDamage(enemy, chosenMonstie);
       break;
     case "water":
       console.log(`\n${enemy.name} uses water!\n`);
-      const waterDamage = await enemyElementDamage(enemy, chosenMonstie);
-      playerHealth -= waterDamage;
+      enemyDamage = await enemyElementDamage(enemy, chosenMonstie);
       break;
     case "leaf":
       console.log(`\n${enemy.name} uses leaf!\n`);
-      const leafDamage = await enemyElementDamage(enemy, chosenMonstie);
-      playerHealth -= leafDamage;
+      enemyDamage = await enemyElementDamage(enemy, chosenMonstie);
       break;
     case "heal":
       console.log(`\n${enemy.name} heals for 2 health!\n`);
-      enemyHealth += 2;
+      newEnemyHealth += 2;
       break;
   }
+
+  return { damage: enemyDamage, newEnemyHealth };
 }
 
 //=======================================================================================================

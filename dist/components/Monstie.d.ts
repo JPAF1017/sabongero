@@ -1,6 +1,5 @@
 export interface MonstieStat {
     id: number;
-    level: number;
     health: number;
     name: string;
     moves: string[];

@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import { team, selectStarterMonstie } from './Monstie.js';
-import { displayMonsties, encounterMonstie } from './Commands.js';
+import { displayMonsties, encounterMonstie, removeMonstie } from './Commands.js';
 
 //=======================================================================================================
 // Function to handle general command input
@@ -26,6 +26,9 @@ export async function processCommand(command: string): Promise<boolean> {
     case 'explore':
       await encounterMonstie();
       return true;
+    case 'remove':
+      await removeMonstie();
+      return true;
     case 'exit':
       console.log("Goodbye!");
       return false;
@@ -39,7 +42,7 @@ export async function processCommand(command: string): Promise<boolean> {
 
 //=======================================================================================================
 // Main input loop function
-export async function startInputLoop(): Promise<void> {
+export async function startGameLoop(): Promise<void> {
   console.log("Welcome to Sabongero!");
   console.log("Commands: list, explore, exit\n");
 

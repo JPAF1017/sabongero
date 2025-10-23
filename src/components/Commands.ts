@@ -47,6 +47,7 @@ export async function encounterMonstie(): Promise<void> {
     answer = response.action.trim().toLowerCase();
   }
 
+  // Handle the player's choice
   switch (answer) {
     case 'flee':
       console.log(`You fled from the wild ${enemy.name}!\n`);
@@ -54,6 +55,47 @@ export async function encounterMonstie(): Promise<void> {
     case 'fight':
       await fightStart(enemy);
       break;
+  }
+}
+//=======================================================================================================
+
+//=======================================================================================================
+// Function for removing member from team
+export async function removeMonstie(): Promise<void> {
+  if (team.length === 0) {
+    console.log("You don't have any monsties in your team yet!\n");
+    return;
+  } else if (team.length === 1) {
+    console.log(`You only have one monstie: ${team[0]?.name}.\n`);
+    return;
+  } else {
+    console.log("Choose your monstie to remove:");
+    team.forEach((monstie, index) => {
+      console.log(`${index + 1}. ${monstie.name} (Health: ${monstie.health}) (Element: ${monstie.moves[1]})`);
+    });
+
+    // Choosing a monstie to remove
+    let selectedIndex = -1;
+    while (selectedIndex < 0 || selectedIndex >= team.length) {
+      const response = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'action',
+          message: `Choose a monstie to remove (1-${team.length}):`,
+        }
+      ]);
+      const choice = parseInt(response.action.trim());
+      selectedIndex = choice - 1;
+      
+      if (selectedIndex < 0 || selectedIndex >= team.length) {
+        console.log(`Please enter a valid number between 1 and ${team.length}`);
+      }
+    }
+
+    // Remove the selected monstie
+    const removedMonstie = team[selectedIndex];
+    team.splice(selectedIndex, 1);
+    console.log(`${removedMonstie?.name} has been removed from your team.\n`);
   }
 }
 //=======================================================================================================

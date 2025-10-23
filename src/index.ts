@@ -1,4 +1,4 @@
-import { startInputLoop } from './components/Input.js';
+import { startGameLoop } from './components/Input.js';
 
-startInputLoop();
+startGameLoop();
 
