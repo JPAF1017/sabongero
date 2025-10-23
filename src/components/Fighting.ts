@@ -131,6 +131,7 @@ export async function fightScene (chosenMonstie: MonstieStat, enemy: MonstieStat
     }
   }
 }
+//=======================================================================================================
 
 //=======================================================================================================
 // Function for enemy's turn
@@ -165,6 +166,7 @@ export async function enemyTurn(enemy: MonstieStat, playerHealth: number, enemyH
 
   return { damage: enemyDamage, newEnemyHealth };
 }
+//=======================================================================================================
 
 //=======================================================================================================
 // Elemental interaction for enemy attaclk
@@ -182,6 +184,7 @@ async function enemyElementDamage(enemy: MonstieStat, chosenMonstie: MonstieStat
     return weakDamage;
   }
 }
+//=======================================================================================================
 
 //=======================================================================================================
 // Element interaction for player attack
