@@ -1,3 +1,3 @@
-import { startGameLoop } from './components/Input.js';
+import { startGameLoop } from './components/GameLogic.js';
 
 startGameLoop();
