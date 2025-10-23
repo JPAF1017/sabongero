@@ -1,6 +1,7 @@
 import inquirer from 'inquirer';
 import { team, selectStarterMonstie } from './Monstie.js';
 import { displayMonsties, encounterMonstie } from './Commands.js';
+//=======================================================================================================
 // Function to handle general command input
 export async function getCommandInput() {
     const answer = await inquirer.prompt([
@@ -12,6 +13,8 @@ export async function getCommandInput() {
     ]);
     return answer.action.trim().toLowerCase();
 }
+//=======================================================================================================
+//=======================================================================================================
 // Function to process commands
 export async function processCommand(command) {
     switch (command) {
@@ -30,6 +33,8 @@ export async function processCommand(command) {
             return true;
     }
 }
+//=======================================================================================================
+//=======================================================================================================
 // Main input loop function
 export async function startInputLoop() {
     console.log("Welcome to Sabongero!");
@@ -53,4 +58,5 @@ export async function startInputLoop() {
         }
     }
 }
+//=======================================================================================================
 //# sourceMappingURL=Input.js.map

@@ -1,6 +1,10 @@
 import inquirer from 'inquirer';
+//=======================================================================================================
+//=======================================================================================================
 // Team of monsties
 export const team = [];
+//=======================================================================================================
+//=======================================================================================================
 // Collection of Monstie
 export const monstie = [
     { id: 1, level: 1, health: 10, name: "Rommeller", moves: ["attack", "fire", "heal"] },
@@ -8,6 +12,8 @@ export const monstie = [
     { id: 3, level: 1, health: 10, name: "Kinit", moves: ["attack", "leaf", "heal"] },
     { id: 4, level: 1, health: 10, name: "Paolito", moves: ["attack", "leaf", "heal"] },
 ];
+//=======================================================================================================
+//=======================================================================================================
 // Function to handle starter monstie selection
 export async function selectStarterMonstie() {
     console.log("Choose your starter monstie");
@@ -30,4 +36,5 @@ export async function selectStarterMonstie() {
         console.log(`You chose ${chosenMonstie.name}! Welcome to your team!\n`);
     }
 }
+//=======================================================================================================
 //# sourceMappingURL=Monstie.js.map
