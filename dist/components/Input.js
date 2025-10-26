@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 //=======================================================================================================
+//=======================================================================================================
 // Generic function to handle input prompts
 export async function getInput(config) {
     const answer = await inquirer.prompt([
@@ -12,11 +13,16 @@ export async function getInput(config) {
     return answer[config.name || 'action'].trim();
 }
 //=======================================================================================================
+//=======================================================================================================
 // Specific reusable input functions for common patterns
+//=======================================================================================================
+//=======================================================================================================
 // Function for general command input
 export async function getCommandInput() {
     return getInput({ message: 'Enter command:' });
 }
+//=======================================================================================================
+//=======================================================================================================
 // Function for choice input with validation
 export async function getChoiceInput(message, validChoices, caseSensitive = false) {
     let choice = "";
@@ -29,6 +35,8 @@ export async function getChoiceInput(message, validChoices, caseSensitive = fals
     }
     return caseSensitive ? choice : choice.toLowerCase();
 }
+//=======================================================================================================
+//=======================================================================================================
 // Function for numeric choice input with validation
 export async function getNumericChoiceInput(message, min, max) {
     let selectedIndex = -1;
@@ -42,6 +50,8 @@ export async function getNumericChoiceInput(message, min, max) {
     }
     return selectedIndex;
 }
+//=======================================================================================================
+//=======================================================================================================
 // Function for fight move input
 export async function getFightMoveInput(moves, enemyName) {
     const moveOptions = moves.map((move, index) => `${index + 1}. ${move}`).join('\n');

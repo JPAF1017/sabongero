@@ -64,7 +64,7 @@ export async function fightScene (chosenMonstie: MonstieStat, enemy: MonstieStat
       //=======================================================================================================
       case "3":
         console.log(`\n${chosenMonstie.name} heals for 2 health!\n`);
-        playerHealth += 2;
+        playerHealth = Math.min(playerHealth + 2, maxPlayerHealth);
         const enemyTurn3 = await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
         playerHealth -= enemyTurn3.damage;
         enemyHealth = enemyTurn3.newEnemyHealth;
@@ -119,6 +119,7 @@ export async function enemyTurn(enemy: MonstieStat, playerHealth: number, enemyH
   const enemyMove = enemy.moves[randomID];
   let enemyDamage = 0;
   let newEnemyHealth = enemyHealth;
+  const enemyMaxHealth = enemy.health;
 
   switch (enemyMove) {
     case "attack":
@@ -139,7 +140,7 @@ export async function enemyTurn(enemy: MonstieStat, playerHealth: number, enemyH
       break;
     case "heal":
       console.log(`\n${enemy.name} heals for 2 health!\n`);
-      newEnemyHealth += 2;
+      newEnemyHealth = Math.min(newEnemyHealth + 2, enemyMaxHealth);
       break;
   }
 
