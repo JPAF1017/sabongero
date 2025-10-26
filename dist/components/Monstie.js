@@ -1,4 +1,4 @@
-import inquirer from 'inquirer';
+import { inputHandler } from './Input.js';
 //=======================================================================================================
 //=======================================================================================================
 // Team of monsties
@@ -11,9 +11,9 @@ export const monstie = [
     { id: 2, health: 10, name: "TheMyle", moves: ["attack", "water", "heal"] },
     { id: 3, health: 10, name: "Kinit", moves: ["attack", "leaf", "heal"] },
     { id: 4, health: 10, name: "Paolito", moves: ["attack", "fire", "heal"] },
-    { id: 5, health: 10, name: "Jarvussy", moves: ["attack", "water", "heal"] },
+    { id: 5, health: 10, name: "Jarvis", moves: ["attack", "water", "heal"] },
     { id: 6, health: 10, name: "Mikil", moves: ["attack", "leaf", "heal"] },
-    { id: 7, health: 10, name: "Si Mama", moves: ["attack", "fire", "heal"] },
+    { id: 7, health: 10, name: "IDunno", moves: ["attack", "fire", "heal"] },
     { id: 8, health: 10, name: "Wirelesswabbit", moves: ["attack", "water", "heal"] },
     { id: 9, health: 10, name: "Gabbagoo", moves: ["attack", "leaf", "heal"] }
 ];
@@ -21,21 +21,10 @@ export const monstie = [
 //=======================================================================================================
 // Function to handle starter monstie selection
 export async function selectStarterMonstie() {
-    console.log("Choose your starter monstie");
-    let choice = "";
-    while (choice !== "1" && choice !== "2" && choice !== "3") {
-        const answer = await inquirer.prompt([
-            {
-                type: 'input',
-                name: 'starter',
-                message: 'Choose your starter monstie (1: Rommeller, 2: TheMyle, 3: Kinit):',
-            }
-        ]);
-        choice = answer.starter.trim();
-    }
+    const starterChoices = ["Rommeller", "TheMyle", "Kinit"];
+    const selectedIndex = await inputHandler.getChoiceInput("Choose your starter monstie", starterChoices, 1);
     // Add the chosen starter to the team
-    const chosenIndex = parseInt(choice) - 1;
-    const chosenMonstie = monstie[chosenIndex];
+    const chosenMonstie = monstie[selectedIndex];
     if (chosenMonstie) {
         team.push(chosenMonstie);
         console.log(`You chose ${chosenMonstie.name}! Welcome to your team!\n`);

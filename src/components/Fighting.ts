@@ -148,15 +148,15 @@ export async function enemyTurn(enemy: MonstieStat, playerHealth: number, enemyH
       break;
     case "fire":
       console.log(`\n${enemy.name} uses fire!\n`);
-      enemyDamage = await enemyElementDamage(enemy, chosenMonstie);
+      enemyDamage = calculateElementDamage(enemy, chosenMonstie);
       break;
     case "water":
       console.log(`\n${enemy.name} uses water!\n`);
-      enemyDamage = await enemyElementDamage(enemy, chosenMonstie);
+      enemyDamage = calculateElementDamage(enemy, chosenMonstie);
       break;
     case "leaf":
       console.log(`\n${enemy.name} uses leaf!\n`);
-      enemyDamage = await enemyElementDamage(enemy, chosenMonstie);
+      enemyDamage = calculateElementDamage(enemy, chosenMonstie);
       break;
     case "heal":
       console.log(`\n${enemy.name} heals for 2 health!\n`);
@@ -169,35 +169,16 @@ export async function enemyTurn(enemy: MonstieStat, playerHealth: number, enemyH
 //=======================================================================================================
 
 //=======================================================================================================
-// Elemental interaction for enemy attaclk
-async function enemyElementDamage(enemy: MonstieStat, chosenMonstie: MonstieStat): Promise<number> {
+// Elemental interaction calculation
+function calculateElementDamage(attacker: MonstieStat, defender: MonstieStat): number {
   const strongDamage = 4;
   const weakDamage = 1;
 
-  if (enemy.moves[1] === "fire" && chosenMonstie.moves[1] === "leaf"){
+  if (attacker.moves[1] === "fire" && defender.moves[1] === "leaf"){
     return strongDamage;
-  } else if (enemy.moves[1] === "leaf" && chosenMonstie.moves[1] === "water") {
+  } else if (attacker.moves[1] === "leaf" && defender.moves[1] === "water") {
     return strongDamage;
-  } else if (enemy.moves[1] === "water" && chosenMonstie.moves[1] === "fire") {
-    return strongDamage;
-  } else {
-    return weakDamage;
-  }
-}
-//=======================================================================================================
-
-//=======================================================================================================
-// Element interaction for player attack
-function calculateElementDamage(chosenMonstie: MonstieStat, enemy: MonstieStat): number {
-  // Base damage for element moves
-  const strongDamage = 4;
-  const weakDamage = 1;
-
-  if (chosenMonstie.moves[1] === "fire" && enemy.moves[1] === "leaf"){
-    return strongDamage;
-  } else if (chosenMonstie.moves[1] === "leaf" && enemy.moves[1] === "water") {
-    return strongDamage;
-  } else if (chosenMonstie.moves[1] === "water" && enemy.moves[1] === "fire") {
+  } else if (attacker.moves[1] === "water" && defender.moves[1] === "fire") {
     return strongDamage;
   } else {
     return weakDamage;
