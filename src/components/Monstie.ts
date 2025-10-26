@@ -1,4 +1,4 @@
-import inquirer from 'inquirer';
+import { getChoiceInput } from './Input.js';
 
 //=======================================================================================================
 // Monstie stats
@@ -34,17 +34,10 @@ export const monstie: MonstieStat[] = [
 // Function to handle starter monstie selection
 export async function selectStarterMonstie(): Promise<void> {
   console.log("Choose your starter monstie");
-  let choice = "";
-  while (choice !== "1" && choice !== "2" && choice !== "3") {
-    const answer = await inquirer.prompt([
-      {
-        type: 'input',
-        name: 'starter',
-        message: 'Choose your starter monstie (1: Rommeller, 2: TheMyle, 3: Kinit):',
-      }
-    ]);
-    choice = answer.starter.trim();
-  }
+  const choice = await getChoiceInput(
+    'Choose your starter monstie (1: Rommeller, 2: TheMyle, 3: Kinit):',
+    ["1", "2", "3"]
+  );
   
 // Add the chosen starter to the team
   const chosenIndex = parseInt(choice) - 1;

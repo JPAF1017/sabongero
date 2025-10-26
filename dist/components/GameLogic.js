@@ -1,11 +1,6 @@
-import { inputHandler } from './Input.js';
 import { team, selectStarterMonstie } from './Monstie.js';
 import { displayMonsties, encounterMonstie, removeMonstie } from './Commands.js';
-//=======================================================================================================
-// Function to handle general command input
-export async function getCommandInput() {
-    return await inputHandler.getCommandInput();
-}
+import { getCommandInput } from './Input.js';
 //=======================================================================================================
 //=======================================================================================================
 // Function to process commands
@@ -34,7 +29,7 @@ export async function processCommand(command) {
 // Main input loop function
 export async function startGameLoop() {
     console.log("Welcome to Sabongero!");
-    console.log("Commands: list, explore, remove, exit\n");
+    console.log("Commands: list, explore, exit\n");
     // Checks if team is empty, then show starter monstie choices
     if (team.length === 0) {
         await selectStarterMonstie();
@@ -42,7 +37,7 @@ export async function startGameLoop() {
     // Error handler and main command loop
     while (true) {
         try {
-            const command = await getCommandInput();
+            const command = (await getCommandInput()).toLowerCase();
             const shouldContinue = await processCommand(command);
             if (!shouldContinue) {
                 break;

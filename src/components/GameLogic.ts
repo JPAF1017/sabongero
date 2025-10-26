@@ -1,19 +1,6 @@
-import inquirer from 'inquirer';
 import { team, selectStarterMonstie } from './Monstie.js';
 import { displayMonsties, encounterMonstie, removeMonstie } from './Commands.js';
-
-//=======================================================================================================
-// Function to handle general command input
-export async function getCommandInput(): Promise<string> {
-  const answer = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'action',
-      message: 'Enter command:',
-    }
-  ]);
-  return answer.action.trim().toLowerCase();
-}
+import { getCommandInput } from './Input.js';
 //=======================================================================================================
 
 //=======================================================================================================
@@ -54,7 +41,7 @@ export async function startGameLoop(): Promise<void> {
   // Error handler and main command loop
   while (true) {
     try {
-      const command = await getCommandInput();
+      const command = (await getCommandInput()).toLowerCase();
       const shouldContinue = await processCommand(command);
       
       if (!shouldContinue) {

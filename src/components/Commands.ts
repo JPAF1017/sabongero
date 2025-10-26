@@ -1,7 +1,7 @@
-import inquirer from 'inquirer';
 import { team, monstie } from './Monstie.js';
 import type { MonstieStat } from './Monstie.js';
 import { fightStart } from './Fighting.js';
+import { getChoiceInput, getNumericChoiceInput } from './Input.js';
 
 //=======================================================================================================
 // Function for displaying monsties
@@ -35,17 +35,10 @@ export async function encounterMonstie(): Promise<void> {
   console.log("\n");
 
   console.log("What do you want to do?");
-  let answer = "";
-  while (answer !== "fight" && answer !== "flee") {
-    const response = await inquirer.prompt([
-      {
-        type: 'input',
-        name: 'action',
-        message: 'Type "fight" to battle or "flee" to run away:',
-      }
-    ]);
-    answer = response.action.trim().toLowerCase();
-  }
+  const answer = await getChoiceInput(
+    'Type "fight" to battle or "flee" to run away:',
+    ["fight", "flee"]
+  );
 
   // Handle the player's choice
   switch (answer) {
@@ -75,22 +68,11 @@ export async function removeMonstie(): Promise<void> {
     });
 
     // Choosing a monstie to remove
-    let selectedIndex = -1;
-    while (selectedIndex < 0 || selectedIndex >= team.length) {
-      const response = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'action',
-          message: `Choose a monstie to remove (1-${team.length}):`,
-        }
-      ]);
-      const choice = parseInt(response.action.trim());
-      selectedIndex = choice - 1;
-      
-      if (selectedIndex < 0 || selectedIndex >= team.length) {
-        console.log(`Please enter a valid number between 1 and ${team.length}`);
-      }
-    }
+    const selectedIndex = await getNumericChoiceInput(
+      `Choose a monstie to remove (1-${team.length}):`,
+      0,
+      team.length - 1
+    );
 
     // Remove the selected monstie
     const removedMonstie = team[selectedIndex];

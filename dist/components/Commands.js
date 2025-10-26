@@ -1,6 +1,6 @@
-import { inputHandler } from './Input.js';
 import { team, monstie } from './Monstie.js';
 import { fightStart } from './Fighting.js';
+import { getChoiceInput, getNumericChoiceInput } from './Input.js';
 //=======================================================================================================
 // Function for displaying monsties
 export function displayMonsties() {
@@ -30,10 +30,7 @@ export async function encounterMonstie() {
     console.log(`You have encountered a wild ${enemy.name}!`);
     console.log("\n");
     console.log("What do you want to do?");
-    const answer = await inputHandler.getValidatedInput('Type "fight" to battle or "flee" to run away:', {
-        validAnswers: ["fight", "flee"],
-        errorMessage: 'Please type "fight" or "flee"'
-    });
+    const answer = await getChoiceInput('Type "fight" to battle or "flee" to run away:', ["fight", "flee"]);
     // Handle the player's choice
     switch (answer) {
         case 'flee':
@@ -57,9 +54,12 @@ export async function removeMonstie() {
         return;
     }
     else {
+        console.log("Choose your monstie to remove:");
+        team.forEach((monstie, index) => {
+            console.log(`${index + 1}. ${monstie.name} (Health: ${monstie.health}) (Element: ${monstie.moves[1]})`);
+        });
         // Choosing a monstie to remove
-        const teamNames = team.map(monstie => `${monstie.name} (Health: ${monstie.health}) (Element: ${monstie.moves[1]})`);
-        const selectedIndex = await inputHandler.getChoiceInput("Choose your monstie to remove:", teamNames, 1);
+        const selectedIndex = await getNumericChoiceInput(`Choose a monstie to remove (1-${team.length}):`, 0, team.length - 1);
         // Remove the selected monstie
         const removedMonstie = team[selectedIndex];
         team.splice(selectedIndex, 1);

@@ -1,22 +1,11 @@
-export interface InputPrompt {
-    type: string;
-    name: string;
+export interface InputPromptConfig {
     message: string;
-    choices?: string[];
+    name?: string;
+    type?: 'input' | 'list' | 'confirm';
 }
-export interface InputOptions {
-    validAnswers?: string[];
-    parseAsNumber?: boolean;
-    minValue?: number;
-    maxValue?: number;
-    errorMessage?: string;
-}
-export declare class InputHandler {
-    getInput(message: string): Promise<string>;
-    getValidatedInput(message: string, options?: InputOptions): Promise<string>;
-    getNumberInput(message: string, options?: InputOptions): Promise<number>;
-    getChoiceInput(message: string, choices: string[], startIndex?: number): Promise<number>;
-    getCommandInput(): Promise<string>;
-}
-export declare const inputHandler: InputHandler;
+export declare function getInput(config: InputPromptConfig): Promise<string>;
+export declare function getCommandInput(): Promise<string>;
+export declare function getChoiceInput(message: string, validChoices: string[], caseSensitive?: boolean): Promise<string>;
+export declare function getNumericChoiceInput(message: string, min: number, max: number): Promise<number>;
+export declare function getFightMoveInput(moves: string[], enemyName: string): Promise<string>;
 //# sourceMappingURL=Input.d.ts.map

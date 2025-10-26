@@ -1,4 +1,4 @@
-import { inputHandler } from './Input.js';
+import { getChoiceInput } from './Input.js';
 //=======================================================================================================
 //=======================================================================================================
 // Team of monsties
@@ -21,10 +21,11 @@ export const monstie = [
 //=======================================================================================================
 // Function to handle starter monstie selection
 export async function selectStarterMonstie() {
-    const starterChoices = ["Rommeller", "TheMyle", "Kinit"];
-    const selectedIndex = await inputHandler.getChoiceInput("Choose your starter monstie", starterChoices, 1);
+    console.log("Choose your starter monstie");
+    const choice = await getChoiceInput('Choose your starter monstie (1: Rommeller, 2: TheMyle, 3: Kinit):', ["1", "2", "3"]);
     // Add the chosen starter to the team
-    const chosenMonstie = monstie[selectedIndex];
+    const chosenIndex = parseInt(choice) - 1;
+    const chosenMonstie = monstie[chosenIndex];
     if (chosenMonstie) {
         team.push(chosenMonstie);
         console.log(`You chose ${chosenMonstie.name}! Welcome to your team!\n`);

@@ -1,96 +1,52 @@
 import inquirer from 'inquirer';
 //=======================================================================================================
-//=======================================================================================================
-// Reusable Input Handler Class
-export class InputHandler {
-    // Basic input method - gets any string input
-    async getInput(message) {
-        const answer = await inquirer.prompt([
-            {
-                type: 'input',
-                name: 'response',
-                message: message,
-            }
-        ]);
-        return answer.response.trim().toLowerCase();
-    }
-    // Validated input method - ensures input meets certain criteria
-    async getValidatedInput(message, options = {}) {
-        const { validAnswers, errorMessage } = options;
-        let input = "";
-        if (validAnswers) {
-            // Keep asking until we get a valid answer from the list
-            while (!validAnswers.includes(input)) {
-                const answer = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'response',
-                        message: message,
-                    }
-                ]);
-                input = answer.response.trim().toLowerCase();
-                if (!validAnswers.includes(input)) {
-                    console.log(errorMessage || `Please enter one of: ${validAnswers.join(', ')}`);
-                }
-            }
+// Generic function to handle input prompts
+export async function getInput(config) {
+    const answer = await inquirer.prompt([
+        {
+            type: config.type || 'input',
+            name: config.name || 'action',
+            message: config.message,
         }
-        else {
-            // Just get input once if no validation needed
-            input = await this.getInput(message);
-        }
-        return input;
-    }
-    // Number input method - gets and validates numeric input
-    async getNumberInput(message, options = {}) {
-        const { minValue, maxValue, errorMessage } = options;
-        let validNumber = false;
-        let number = 0;
-        while (!validNumber) {
-            const answer = await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'response',
-                    message: message,
-                }
-            ]);
-            const parsed = parseInt(answer.response.trim());
-            if (isNaN(parsed)) {
-                console.log("Please enter a valid number");
-                continue;
-            }
-            if (minValue !== undefined && parsed < minValue) {
-                console.log(errorMessage || `Please enter a number >= ${minValue}`);
-                continue;
-            }
-            if (maxValue !== undefined && parsed > maxValue) {
-                console.log(errorMessage || `Please enter a number <= ${maxValue}`);
-                continue;
-            }
-            number = parsed;
-            validNumber = true;
-        }
-        return number;
-    }
-    // Choice input method - gets selection from a numbered list
-    async getChoiceInput(message, choices, startIndex = 1) {
-        // Display choices
-        console.log(message);
-        choices.forEach((choice, index) => {
-            console.log(`${index + startIndex}. ${choice}`);
-        });
-        const selectedIndex = await this.getNumberInput(`Choose an option (${startIndex}-${choices.length + startIndex - 1}):`, {
-            minValue: startIndex,
-            maxValue: choices.length + startIndex - 1,
-            errorMessage: `Please enter a valid number between ${startIndex} and ${choices.length + startIndex - 1}`
-        });
-        return selectedIndex - startIndex; // Return 0-based index
-    }
-    // Command input method - specifically for game commands
-    async getCommandInput() {
-        return await this.getInput('Enter command:');
-    }
+    ]);
+    return answer[config.name || 'action'].trim();
 }
-// Create and export a default instance for convenience
-export const inputHandler = new InputHandler();
+//=======================================================================================================
+// Specific reusable input functions for common patterns
+// Function for general command input
+export async function getCommandInput() {
+    return getInput({ message: 'Enter command:' });
+}
+// Function for choice input with validation
+export async function getChoiceInput(message, validChoices, caseSensitive = false) {
+    let choice = "";
+    const validChoicesSet = new Set(caseSensitive ? validChoices : validChoices.map(c => c.toLowerCase()));
+    while (!validChoicesSet.has(caseSensitive ? choice : choice.toLowerCase())) {
+        choice = await getInput({ message });
+        if (!validChoicesSet.has(caseSensitive ? choice : choice.toLowerCase())) {
+            console.log(`Please enter one of: ${validChoices.join(', ')}`);
+        }
+    }
+    return caseSensitive ? choice : choice.toLowerCase();
+}
+// Function for numeric choice input with validation
+export async function getNumericChoiceInput(message, min, max) {
+    let selectedIndex = -1;
+    while (selectedIndex < min || selectedIndex > max) {
+        const input = await getInput({ message });
+        const choice = parseInt(input);
+        selectedIndex = choice - 1; // Convert to 0-based index
+        if (selectedIndex < min || selectedIndex > max) {
+            console.log(`Please enter a valid number between ${min + 1} and ${max + 1}`);
+        }
+    }
+    return selectedIndex;
+}
+// Function for fight move input
+export async function getFightMoveInput(moves, enemyName) {
+    const moveOptions = moves.map((move, index) => `${index + 1}. ${move}`).join('\n');
+    const message = `Choose your move:\n${moveOptions}\n4. Capture ${enemyName}\nEnter 1, 2, 3, or 4:`;
+    return getChoiceInput(message, ["1", "2", "3", "4"]);
+}
 //=======================================================================================================
 //# sourceMappingURL=Input.js.map

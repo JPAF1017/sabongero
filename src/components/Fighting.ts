@@ -1,6 +1,6 @@
-import inquirer from 'inquirer';
 import { team } from './Monstie.js';
 import type { MonstieStat } from './Monstie.js';
+import { getNumericChoiceInput, getFightMoveInput } from './Input.js';
 
 //=======================================================================================================
 // Function choosing a monstie for fighting
@@ -18,22 +18,11 @@ export async function fightStart(enemy: MonstieStat): Promise<void> {
   });
 
   // Choosing a monstie
-  let selectedIndex = -1;
-  while (selectedIndex < 0 || selectedIndex >= team.length) {
-    const response = await inquirer.prompt([
-      {
-        type: 'input',
-        name: 'action',
-        message: `Choose your monstie (1-${team.length}):`,
-      }
-    ]);
-    const choice = parseInt(response.action.trim());
-    selectedIndex = choice - 1;
-    
-    if (selectedIndex < 0 || selectedIndex >= team.length) {
-      console.log(`Please enter a valid number between 1 and ${team.length}`);
-    }
-  }
+  const selectedIndex = await getNumericChoiceInput(
+    `Choose your monstie (1-${team.length}):`,
+    0,
+    team.length - 1
+  );
   const chosenMonstie = team[selectedIndex]!;
   console.log(`You chose ${chosenMonstie.name} to fight against ${enemy.name}!\n`);
 
@@ -50,17 +39,7 @@ export async function fightScene (chosenMonstie: MonstieStat, enemy: MonstieStat
   let enemyMaxHealth = enemy.health;
   
   while (playerHealth > 0 && enemyHealth > 0) { 
-    let action = "";
-    while (action !== "1" && action !== "2" && action !== "3" && action !== "4") { 
-      const response = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'move',
-          message: `Choose your move:\n1. ${chosenMonstie.moves[0]}\n2. ${chosenMonstie.moves[1]}\n3. ${chosenMonstie.moves[2]}\n4. Capture ${enemy.name}\nEnter 1, 2, 3, or 4:`,
-        }
-      ]);
-      action = response.move.trim();
-    }
+    const action = await getFightMoveInput(chosenMonstie.moves, enemy.name);
     
     switch (action) {
       //=======================================================================================================

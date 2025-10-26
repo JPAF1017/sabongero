@@ -1,1 +1,1 @@
-{"version":3,"file":"GameLogic.d.ts","sourceRoot":"","sources":["../../src/components/GameLogic.ts"],"names":[],"mappings":"AAMA,wBAAsB,eAAe,IAAI,OAAO,CAAC,MAAM,CAAC,CAEvD;AAKD,wBAAsB,cAAc,CAAC,OAAO,EAAE,MAAM,GAAG,OAAO,CAAC,OAAO,CAAC,CAmBtE;AAKD,wBAAsB,aAAa,IAAI,OAAO,CAAC,IAAI,CAAC,CAuBnD"}
+{"version":3,"file":"GameLogic.d.ts","sourceRoot":"","sources":["../../src/components/GameLogic.ts"],"names":[],"mappings":"AAOA,wBAAsB,cAAc,CAAC,OAAO,EAAE,MAAM,GAAG,OAAO,CAAC,OAAO,CAAC,CAmBtE;AAKD,wBAAsB,aAAa,IAAI,OAAO,CAAC,IAAI,CAAC,CAuBnD"}
