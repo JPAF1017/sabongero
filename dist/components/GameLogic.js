@@ -29,7 +29,7 @@ export async function processCommand(command) {
 // Main input loop function
 export async function startGameLoop() {
     console.log("Welcome to Sabongero!");
-    console.log("Commands: list, explore, exit\n");
+    console.log("Commands: list, explore, remove, exit\n");
     // Checks if team is empty, then show starter monstie choices
     if (team.length === 0) {
         await selectStarterMonstie();

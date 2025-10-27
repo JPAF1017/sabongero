@@ -31,7 +31,7 @@ export async function processCommand(command: string): Promise<boolean> {
 // Main input loop function
 export async function startGameLoop(): Promise<void> {
   console.log("Welcome to Sabongero!");
-  console.log("Commands: list, explore, exit\n");
+  console.log("Commands: list, explore, remove, exit\n");
 
   // Checks if team is empty, then show starter monstie choices
   if (team.length === 0) {

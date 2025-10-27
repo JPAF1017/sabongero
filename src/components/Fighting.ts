@@ -1,4 +1,4 @@
-import { team } from './Monstie.js';
+import { team, selectStarterMonstie } from './Monstie.js';
 import type { MonstieStat } from './Monstie.js';
 import { getNumericChoiceInput, getFightMoveInput } from './Input.js';
 
@@ -106,6 +106,19 @@ export async function fightScene (chosenMonstie: MonstieStat, enemy: MonstieStat
     }
     if (playerHealth <= 0) {
       console.log(`\n${chosenMonstie.name} has been defeated! You lost the battle!\n`);
+      
+      // Remove the defeated monstie from the team
+      const monstieeIndex = team.findIndex(monstie => monstie === chosenMonstie);
+      if (monstieeIndex !== -1) {
+        team.splice(monstieeIndex, 1);
+        console.log(`${chosenMonstie.name} has been removed from your team.\n`);
+        
+        // Check if team is empty and trigger starter selection
+        if (team.length === 0) {
+          console.log("Your team is empty! You need to choose a new starter monstie.\n");
+          await selectStarterMonstie();
+        }
+      }
       return;
     }
   }
@@ -127,15 +140,15 @@ export async function enemyTurn(enemy: MonstieStat, playerHealth: number, enemyH
       enemyDamage = 2;
       break;
     case "fire":
-      console.log(`\n${enemy.name} uses fire!\n`);
+      console.log(`\n${enemy.name} uses fire for ${enemyDamage} damage!\n`);
       enemyDamage = calculateElementDamage(enemy, chosenMonstie);
       break;
     case "water":
-      console.log(`\n${enemy.name} uses water!\n`);
+      console.log(`\n${enemy.name} uses water for ${enemyDamage} damage!\n`);
       enemyDamage = calculateElementDamage(enemy, chosenMonstie);
       break;
     case "leaf":
-      console.log(`\n${enemy.name} uses leaf!\n`);
+      console.log(`\n${enemy.name} uses leaf for ${enemyDamage} damage!\n`);
       enemyDamage = calculateElementDamage(enemy, chosenMonstie);
       break;
     case "heal":

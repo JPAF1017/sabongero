@@ -5,7 +5,7 @@ import inquirer from 'inquirer';
 export interface InputPromptConfig {
   message: string;
   name?: string;
-  type?: 'input' | 'list' | 'confirm';
+  type?: 'input' | 'list' | 'confirm' ;
 }
 //=======================================================================================================
 

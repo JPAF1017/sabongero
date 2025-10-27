@@ -52,7 +52,7 @@ export async function fightScene(chosenMonstie, enemy) {
             //=======================================================================================================
             case "3":
                 console.log(`\n${chosenMonstie.name} heals for 2 health!\n`);
-                playerHealth += 2;
+                playerHealth = Math.min(playerHealth + 2, maxPlayerHealth);
                 const enemyTurn3 = await enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie);
                 playerHealth -= enemyTurn3.damage;
                 enemyHealth = enemyTurn3.newEnemyHealth;
@@ -95,6 +95,12 @@ export async function fightScene(chosenMonstie, enemy) {
         }
         if (playerHealth <= 0) {
             console.log(`\n${chosenMonstie.name} has been defeated! You lost the battle!\n`);
+            // Remove the defeated monstie from the team
+            const monstieeIndex = team.findIndex(monstie => monstie === chosenMonstie);
+            if (monstieeIndex !== -1) {
+                team.splice(monstieeIndex, 1);
+                console.log(`${chosenMonstie.name} has been removed from your team.\n`);
+            }
             return;
         }
     }
@@ -107,26 +113,27 @@ export async function enemyTurn(enemy, playerHealth, enemyHealth, chosenMonstie)
     const enemyMove = enemy.moves[randomID];
     let enemyDamage = 0;
     let newEnemyHealth = enemyHealth;
+    const enemyMaxHealth = enemy.health;
     switch (enemyMove) {
         case "attack":
             console.log(`\n${enemy.name} attacks for 2 damage!\n`);
             enemyDamage = 2;
             break;
         case "fire":
-            console.log(`\n${enemy.name} uses fire!\n`);
+            console.log(`\n${enemy.name} uses fire for ${enemyDamage} damage!\n`);
             enemyDamage = calculateElementDamage(enemy, chosenMonstie);
             break;
         case "water":
-            console.log(`\n${enemy.name} uses water!\n`);
+            console.log(`\n${enemy.name} uses water for ${enemyDamage} damage!\n`);
             enemyDamage = calculateElementDamage(enemy, chosenMonstie);
             break;
         case "leaf":
-            console.log(`\n${enemy.name} uses leaf!\n`);
+            console.log(`\n${enemy.name} uses leaf for ${enemyDamage} damage!\n`);
             enemyDamage = calculateElementDamage(enemy, chosenMonstie);
             break;
         case "heal":
             console.log(`\n${enemy.name} heals for 2 health!\n`);
-            newEnemyHealth += 2;
+            newEnemyHealth = Math.min(newEnemyHealth + 2, enemyMaxHealth);
             break;
     }
     return { damage: enemyDamage, newEnemyHealth };
